@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurant Management System</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>
+tailwind.config={
+  theme:{
+    extend:{
+      colors:{
+        primary:'#FF9200',
+        secondary:'#3B82F6',
+        success: '#22c55e',
+        warning: '#eab308',
+        danger: '#ef4444',
+        info: '#3b82f6'
+      },
+      borderRadius:{
+        'none':'0px',
+        'sm':'8px',
+        DEFAULT:'12px',
+        'md':'16px',
+        'lg':'20px',
+        'xl':'24px',
+        '2xl':'28px',
+        '3xl':'32px',
+        'full':'9999px',
+        'button':'12px'
+      },
+      animation: {
+        'bounce-once': 'bounce 0.5s ease-in-out 1',
+        'spin-once': 'spin 0.5s linear 1',
+        'fade-in': 'fadeIn 0.3s ease-in-out',
+        'slide-up': 'slideUp 0.3s ease-in-out',
+        'slide-down': 'slideDown 0.3s ease-in-out',
+        'slide-in-right': 'slideInRight 0.3s ease-in-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        slideUp: {
+          '0%': { transform: 'translateY(10px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        slideDown: {
+          '0%': { transform: 'translateY(-10px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        slideInRight: {
+          '0%': { transform: 'translateX(20px)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+      }
+    }
+  }
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+<style>
+:root {
+  --primary: rgba(255, 146, 0, 0.85);
+  --primary-light: rgba(255, 146, 0, 0.15);
+  --primary-hover: rgba(255, 146, 0, 0.75);
+  --secondary: rgba(59, 130, 246, 0.85);
+  --secondary-light: rgba(59, 130, 246, 0.15);
+  --gray-50: rgba(249, 250, 251, 1);
+  --gray-100: rgba(243, 244, 246, 0.8);
+  --gray-200: rgba(229, 231, 235, 0.8);
+  --gray-300: rgba(209, 213, 219, 0.8);
+  --gray-400: rgba(156, 163, 175, 0.8);
+  --gray-500: rgba(107, 114, 128, 0.8);
+  --gray-600: rgba(75, 85, 99, 0.8);
+  --gray-700: rgba(55, 65, 81, 0.8);
+  --success: rgba(34, 197, 94, 0.85);
+  --success-light: rgba(34, 197, 94, 0.15);
+  --warning: rgba(234, 179, 8, 0.85);
+  --warning-light: rgba(234, 179, 8, 0.15);
+  --danger: rgba(239, 68, 68, 0.85);
+  --danger-light: rgba(239, 68, 68, 0.15);
+  --info: rgba(59, 130, 246, 0.85);
+  --info-light: rgba(59, 130, 246, 0.15);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--gray-50);
+  color: var(--gray-700);
+}
+
+.login-input {
+  transition: all 0.2s ease-in-out;
+  border-color: var(--gray-300);
+}
+
+.login-input:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.role-btn {
+  transition: all 0.3s ease;
+  background-color: var(--gray-100);
+  color: var(--gray-700);
+  border: 1px solid transparent;
+}
+
+.role-btn:hover, .role-btn.active {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+button {
+  transition: all 0.2s ease-in-out;
+}
+
+button.bg-primary {
+  background-color: var(--primary);
+}
+
+button.bg-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+button.bg-secondary {
+  background-color: var(--secondary);
+}
+
+button.text-primary {
+  color: var(--primary);
+}
+
+.table-card {
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.table-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.table-card.bg-gray-200 {
+  background-color: var(--gray-200);
+}
+
+.table-card.bg-primary {
+  background-color: var(--primary);
+}
+
+.table-card.bg-yellow-400 {
+  background-color: var(--warning);
+}
+
+.table-card.bg-green-500 {
+  background-color: var(--success);
+}
+
+.table-card.bg-red-500 {
+  background-color: var(--danger);
+}
+
+.table-card.bg-blue-500 {
+  background-color: var(--info);
+}
+
+.category-filter {
+  transition: all 0.2s ease;
+}
+
+.category-filter.active {
+  background-color: var(--primary);
+}
+
+.bg-green-500 {
+  background-color: var(--success);
+}
+
+.bg-yellow-400 {
+  background-color: var(--warning);
+}
+
+.bg-red-500 {
+  background-color: var(--danger);
+}
+
+.bg-blue-500 {
+  background-color: var(--info);
+}
+
+.text-green-500 {
+  color: var(--success);
+}
+
+.text-yellow-400 {
+  color: var(--warning);
+}
+
+.text-red-500, .text-red-600 {
+  color: var(--danger);
+}
+
+.text-blue-500 {
+  color: var(--info);
+}
+
+.payment-method-btn {
+  background-color: var(--gray-100);
+}
+
+.payment-method-btn:hover {
+  background-color: var(--primary-light);
+  color: var(--primary);
+}
+
+/* Glass effect for cards */
+.bg-white {
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+/* Modern shadows */
+.shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Improved form elements */
+input, select, textarea {
+  transition: all 0.2s ease-in-out;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+  outline: none;
+}
+
+/* Bottom navigation */
+.fixed.bottom-0 {
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--gray-200);
+}
+
+/* Ripple effect */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Slide out animation */
+@keyframes slideOutRight {
+  0% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(20px); opacity: 0; }
+}
+
+.animate-slide-out-right {
+  animation: slideOutRight 0.3s ease-in-out forwards;
+}
+
+/* Improve modals */
+[id$="-modal"] {
+  backdrop-filter: blur(4px);
+  transition: backdrop-filter 0.3s ease;
+}
+
+[id$="-modal"] .bg-white.rounded-lg {
+  transform: scale(0.95);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+[id$="-modal"]:not(.hidden) .bg-white.rounded-lg {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Improve buttons */
+button:not([data-no-effects]) {
+  position: relative;
+  overflow: hidden;
+  transform: translateY(0);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:not([data-no-effects]):active {
+  transform: translateY(1px);
+}
+
+/* Subtle hover effects */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+</style>
+</head>
+<body class="bg-white">
+<div class="flex flex-col min-h-screen w-[375px] mx-auto relative pb-16">
+<!-- Login Screen -->
+<div id="login-screen" class="flex flex-col items-center justify-center min-h-screen px-6 py-12">
+<div class="w-full max-w-md space-y-8">
+<div class="text-center">
+<h1 class="text-4xl font-['Pacifico'] text-primary mb-2">logo</h1>
+<p class="text-gray-600 mt-2">Restoran Yönetim Sistemi</p>
+</div>
+<div class="mt-8">
+<div class="grid grid-cols-3 gap-3 mb-6">
+<button id="waiter-role" class="role-btn py-3 px-4 bg-gray-100 rounded-button text-gray-700 font-medium hover:bg-primary hover:text-white transition-all cursor-pointer">
+<div class="w-8 h-8 mx-auto mb-1 flex items-center justify-center">
+<i class="ri-user-line ri-lg"></i>
+</div>
+<span class="text-xs">Garson</span>
+</button>
+<button id="kitchen-role" class="role-btn py-3 px-4 bg-gray-100 rounded-button text-gray-700 font-medium hover:bg-primary hover:text-white transition-all cursor-pointer">
+<div class="w-8 h-8 mx-auto mb-1 flex items-center justify-center">
+<i class="ri-restaurant-line ri-lg"></i>
+</div>
+<span class="text-xs">Mutfak</span>
+</button>
+<button id="cashier-role" class="role-btn py-3 px-4 bg-gray-100 rounded-button text-gray-700 font-medium hover:bg-primary hover:text-white transition-all cursor-pointer">
+<div class="w-8 h-8 mx-auto mb-1 flex items-center justify-center">
+<i class="ri-money-dollar-circle-line ri-lg"></i>
+</div>
+<span class="text-xs">Kasa</span>
+</button>
+</div>
+<div class="space-y-4">
+<div>
+<label for="username" class="block text-sm font-medium text-gray-700 mb-1">Kullanıcı Adı</label>
+<input id="username" type="text" class="login-input w-full px-4 py-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary/20" placeholder="Kullanıcı adınızı girin">
+</div>
+<div>
+<label for="password" class="block text-sm font-medium text-gray-700 mb-1">Şifre</label>
+<input id="password" type="password" class="login-input w-full px-4 py-3 border border-gray-300 rounded-button focus:ring-2 focus:ring-primary/20" placeholder="Şifrenizi girin">
+</div>
+</div>
+<div class="mt-6">
+<button id="login-btn" class="w-full bg-primary text-white py-3 rounded-button font-medium hover:bg-primary/90 transition-all cursor-pointer !rounded-button">
+Giriş Yap
+</button>
+</div>
+<div id="login-error" class="mt-4 text-center text-red-500 text-sm hidden">
+Geçersiz kullanıcı adı veya şifre. Lütfen tekrar deneyin.
+</div>
+<div class="mt-6 text-center text-xs text-gray-500">
+<p>Giriş Bilgileri: garson1 / mutfak1 / kasa1</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Waiter Panel -->
+<div id="waiter-panel" class="hidden pt-16 pb-20">
+<!-- Top Navigation -->
+<div class="fixed top-0 left-0 right-0 bg-white shadow-md z-10 w-[375px] mx-auto">
+<div class="flex items-center justify-between px-4 py-3">
+<div class="flex items-center">
+<h1 class="text-xl font-['Pacifico'] text-primary">logo</h1>
+</div>
+<div class="flex items-center space-x-3">
+<div class="text-sm font-medium">Garson</div>
+<button id="waiter-logout" class="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full cursor-pointer">
+<i class="ri-logout-box-line"></i>
+</button>
+</div>
+</div>
+<!-- Status Legend -->
+<div class="flex items-center justify-between px-4 py-2 bg-gray-50 text-xs">
+<div class="flex items-center">
+<span class="w-3 h-3 rounded-full bg-gray-300 mr-1"></span>
+<span>Boş</span>
+</div>
+<div class="flex items-center">
+<span class="w-3 h-3 rounded-full bg-primary mr-1"></span>
+<span>Dolu</span>
+</div>
+<div class="flex items-center">
+<span class="w-3 h-3 rounded-full bg-yellow-400 mr-1"></span>
+<span>Hazırlanıyor</span>
+</div>
+<div class="flex items-center">
+<span class="w-3 h-3 rounded-full bg-green-500 mr-1"></span>
+<span>Hazır</span>
+</div>
+<div class="flex items-center">
+<span class="w-3 h-3 rounded-full bg-red-500 mr-1"></span>
+<span>Çağrı</span>
+</div>
+</div>
+</div>
+<!-- Tables Grid -->
+<div class="px-3 py-4">
+<div class="grid grid-cols-4 gap-3" id="tables-grid">
+<!-- Tables will be generated here -->
+</div>
+</div>
+<!-- Floating Action Button -->
+<div class="fixed bottom-20 right-4 z-10">
+<button id="refresh-tables" class="w-12 h-12 bg-secondary text-white rounded-full shadow-lg flex items-center justify-center cursor-pointer">
+<i class="ri-refresh-line ri-lg"></i>
+</button>
+</div>
+</div>
+<!-- Table Detail Modal -->
+<div id="table-detail-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+<div class="bg-white rounded-lg w-[350px] max-h-[600px] overflow-y-auto">
+<div class="p-4 border-b">
+<div class="flex items-center justify-between">
+<h2 class="text-lg font-semibold" id="modal-table-number">Masa 1</h2>
+<button id="close-modal" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 cursor-pointer">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+</div>
+<div class="p-4">
+<div class="mb-4">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-sm font-medium text-gray-700">Mevcut Sipariş</h3>
+<button id="add-items-btn" class="flex items-center text-primary text-sm font-medium cursor-pointer">
+<i class="ri-add-line mr-1"></i>
+<span>Add Items</span>
+</button>
+</div>
+<div id="current-order-items" class="space-y-2 mb-3 max-h-[200px] overflow-y-auto">
+<!-- Order items will be displayed here -->
+<div class="text-sm text-gray-500 italic">Henüz ürün eklenmedi</div>
+</div>
+<div class="text-sm font-medium flex justify-between border-t pt-2">
+<span>Toplam:</span>
+<span id="order-total">₺0.00</span>
+</div>
+</div>
+<div class="mb-4">
+<h3 class="text-sm font-medium text-gray-700 mb-2">Not</h3>
+<textarea id="order-note" class="w-full px-3 py-2 border border-gray-300 rounded-button text-sm" rows="2" placeholder="Özel talimatlar ekleyin..."></textarea>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<button id="send-order" class="bg-primary text-white py-2 rounded-button text-sm font-medium cursor-pointer !rounded-button flex items-center justify-center">
+<i class="ri-send-plane-line mr-1"></i>
+<span>Mutfağa Gönder</span>
+</button>
+<button id="mark-delivered" class="bg-green-500 text-white py-2 rounded-button text-sm font-medium cursor-pointer !rounded-button flex items-center justify-center">
+<i class="ri-check-line mr-1"></i>
+<span>Teslim Edildi</span>
+</button>
+<button id="mark-payment" class="bg-blue-500 text-white py-2 rounded-button text-sm font-medium cursor-pointer !rounded-button flex items-center justify-center">
+<i class="ri-money-dollar-circle-line mr-1"></i>
+<span>Kasaya Gönder</span>
+</button>
+<button id="clear-table" class="bg-gray-200 text-gray-700 py-2 rounded-button text-sm font-medium cursor-pointer !rounded-button flex items-center justify-center">
+<i class="ri-delete-bin-line mr-1"></i>
+<span>Masayı Temizle</span>
+</button>
+</div>
+<div class="mt-4 pt-3 border-t">
+<button id="qr-response" class="w-full bg-red-100 text-red-600 py-2 rounded-button text-sm font-medium flex items-center justify-center cursor-pointer !rounded-button">
+<i class="ri-customer-service-2-line mr-2"></i>
+<span>Geliyorum</span>
+</button>
+</div>
+</div>
+<!-- Add Items Modal -->
+<div id="add-items-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+<div class="bg-white rounded-lg w-[350px] max-h-[600px] overflow-y-auto">
+<div class="p-4 border-b sticky top-0 bg-white z-10">
+<div class="flex items-center justify-between">
+<h2 class="text-lg font-semibold">Ürün Ekle</h2>
+<button id="close-add-items-modal" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 cursor-pointer">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+<div class="mt-2">
+<div class="relative">
+<input type="text" id="search-products" class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-button text-sm" placeholder="Ürün ara...">
+<i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+</div>
+</div>
+</div>
+<div class="p-4">
+<div class="space-y-2 mb-4">
+<div class="flex items-center space-x-2">
+<button class="category-filter active px-3 py-1 rounded-full text-xs font-medium bg-primary text-white" data-category="all">Tümü</button>
+<button class="category-filter px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700" data-category="food">Yemekler</button>
+<button class="category-filter px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700" data-category="drinks">İçecekler</button>
+<button class="category-filter px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700" data-category="desserts">Tatlılar</button>
+</div>
+</div>
+<div id="product-selection" class="grid grid-cols-2 gap-3">
+<!-- Products will be generated here -->
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Kitchen Panel -->
+<div id="kitchen-panel" class="hidden pt-16 pb-20">
+<!-- Top Navigation -->
+<div class="fixed top-0 left-0 right-0 bg-white shadow-md z-10 w-[375px] mx-auto">
+<div class="flex items-center justify-between px-4 py-3">
+<div class="flex items-center">
+<h1 class="text-xl font-['Pacifico'] text-primary">logo</h1>
+</div>
+<div class="flex items-center space-x-3">
+<div class="text-sm font-medium">Mutfak</div>
+<button id="kitchen-logout" class="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full cursor-pointer">
+<i class="ri-logout-box-line"></i>
+</button>
+</div>
+</div>
+<div class="flex items-center px-4 py-2 bg-gray-50">
+<h2 class="text-sm font-medium">Active Orders</h2>
+</div>
+</div>
+<!-- Orders List -->
+<div class="px-3 py-4">
+<div id="active-orders" class="space-y-4">
+<!-- Orders will be generated here -->
+<div class="text-center py-8 text-gray-500">
+Şu anda aktif sipariş yok
+</div>
+</div>
+</div>
+<!-- Floating Action Button -->
+<div class="fixed bottom-20 right-4 z-10">
+<button id="refresh-orders" class="w-12 h-12 bg-secondary text-white rounded-full shadow-lg flex items-center justify-center cursor-pointer">
+<i class="ri-refresh-line ri-lg"></i>
+</button>
+</div>
+</div>
+<!-- Cashier Panel -->
+<div id="cashier-panel" class="hidden pt-16 pb-20">
+<!-- Top Navigation -->
+<div class="fixed top-0 left-0 right-0 bg-white shadow-md z-10 w-[375px] mx-auto">
+<div class="flex items-center justify-between px-4 py-3">
+<div class="flex items-center">
+<h1 class="text-xl font-['Pacifico'] text-primary">logo</h1>
+</div>
+<div class="flex items-center space-x-3">
+<div class="text-sm font-medium">Kasa</div>
+<button id="cashier-logout" class="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full cursor-pointer">
+<i class="ri-logout-box-line"></i>
+</button>
+</div>
+</div>
+<!-- Tab Navigation -->
+<div class="flex border-b">
+<button id="tab-payments" class="flex-1 py-2 px-4 text-sm font-medium text-primary border-b-2 border-primary">Ödemeler</button>
+<button id="tab-products" class="flex-1 py-2 px-4 text-sm font-medium text-gray-500">Ürünler</button>
+</div>
+</div>
+<!-- Payments Tab -->
+<div id="payments-content" class="px-3 py-4">
+<div id="payment-tables" class="space-y-4">
+<!-- Payment tables will be generated here -->
+<div class="text-center py-8 text-gray-500">
+Ödeme bekleyen masa yok
+</div>
+</div>
+</div>
+<!-- Products Tab -->
+<div id="products-content" class="px-3 py-4 hidden">
+<div class="mb-4">
+<button id="add-product-btn" class="w-full bg-primary text-white py-2 rounded-button text-sm font-medium cursor-pointer !rounded-button">
+Yeni Ürün Ekle
+</button>
+</div>
+<div id="product-list" class="space-y-3">
+<!-- Products will be generated here -->
+</div>
+</div>
+<!-- Floating Action Button -->
+<div class="fixed bottom-20 right-4 z-10">
+<button id="refresh-cashier" class="w-12 h-12 bg-secondary text-white rounded-full shadow-lg flex items-center justify-center cursor-pointer">
+<i class="ri-refresh-line ri-lg"></i>
+</button>
+</div>
+</div>
+<!-- Payment Modal -->
+<div id="payment-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+<div class="bg-white rounded-lg w-[350px]">
+<div class="p-4 border-b">
+<div class="flex items-center justify-between">
+<h2 class="text-lg font-semibold" id="payment-table-number">Table 1</h2>
+<button id="close-payment-modal" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 cursor-pointer">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+</div>
+<div class="p-4">
+<div class="mb-4">
+<h3 class="text-sm font-medium text-gray-700 mb-2">Order Summary</h3>
+<div id="payment-order-items" class="space-y-2 mb-3">
+<!-- Order items will be displayed here -->
+</div>
+<div class="text-sm font-medium flex justify-between border-t pt-2">
+<span>Total:</span>
+<span id="payment-total">$0.00</span>
+</div>
+</div>
+<div class="mb-4">
+<h3 class="text-sm font-medium text-gray-700 mb-2">Payment Method</h3>
+<div class="grid grid-cols-3 gap-2">
+<button class="payment-method-btn py-2 px-3 bg-gray-100 rounded-button text-gray-700 text-sm font-medium hover:bg-primary hover:text-white transition-all cursor-pointer" data-method="cash">Nakit</button>
+<button class="payment-method-btn py-2 px-3 bg-gray-100 rounded-button text-gray-700 text-sm font-medium hover:bg-primary hover:text-white transition-all cursor-pointer" data-method="card">Kredi Kartı</button>
+<button class="payment-method-btn py-2 px-3 bg-gray-100 rounded-button text-gray-700 text-sm font-medium hover:bg-primary hover:text-white transition-all cursor-pointer" data-method="split">Bölünmüş</button>
+</div>
+</div>
+<div id="cash-payment-section" class="mb-4 hidden">
+<h3 class="text-sm font-medium text-gray-700 mb-2">Cash Amount</h3>
+<input type="number" id="cash-amount" class="w-full px-3 py-2 border border-gray-300 rounded-button text-sm" placeholder="Enter cash amount">
+<div class="mt-2 flex justify-between text-sm">
+<span>Change:</span>
+<span id="change-amount">$0.00</span>
+</div>
+</div>
+<div id="split-payment-section" class="mb-4 hidden">
+<h3 class="text-sm font-medium text-gray-700 mb-2">Partial Amount</h3>
+<input type="number" id="split-amount" class="w-full px-3 py-2 border border-gray-300 rounded-button text-sm" placeholder="Enter partial amount">
+<div class="mt-2 flex justify-between text-sm">
+<span>Remaining:</span>
+<span id="remaining-amount">$0.00</span>
+</div>
+</div>
+<button id="complete-payment" class="w-full bg-primary text-white py-3 rounded-button font-medium cursor-pointer !rounded-button">
+Complete Payment
+</button>
+</div>
+</div>
+</div>
+<!-- Product Modal -->
+<div id="product-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+<div class="bg-white rounded-lg w-[350px]">
+<div class="p-4 border-b">
+<div class="flex items-center justify-between">
+<h2 class="text-lg font-semibold" id="product-modal-title">Yeni Ürün Ekle</h2>
+<button id="close-product-modal" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 cursor-pointer">
+<i class="ri-close-line ri-lg"></i>
+</button>
+</div>
+</div>
+<div class="p-4">
+<div class="mb-4">
+<label for="product-name" class="block text-sm font-medium text-gray-700 mb-1">Ürün Adı</label>
+<input id="product-name" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-button text-sm" placeholder="Ürün adını girin">
+</div>
+<div class="mb-4">
+<label for="product-price" class="block text-sm font-medium text-gray-700 mb-1">Fiyat</label>
+<input id="product-price" type="number" step="0.01" class="w-full px-3 py-2 border border-gray-300 rounded-button text-sm" placeholder="Fiyat girin">
+</div>
+<div class="mb-4">
+<label for="product-category" class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+<select id="product-category" class="w-full px-3 py-2 border border-gray-300 rounded-button text-sm">
+<option value="food">Yemekler</option>
+<option value="drinks">İçecekler</option>
+<option value="desserts">Tatlılar</option>
+</select>
+</div>
+<div class="mb-4">
+<label for="product-image" class="block text-sm font-medium text-gray-700 mb-1">Resim URL</label>
+<input id="product-image" type="text" class="w-full px-3 py-2 border border-gray-300 rounded-button text-sm" placeholder="Resim URL'sini girin">
+</div>
+<div class="mb-4 flex items-center">
+<input id="product-active" type="checkbox" class="w-4 h-4 text-primary border-gray-300 rounded" checked>
+<label for="product-active" class="ml-2 block text-sm text-gray-700">Aktif</label>
+</div>
+<button id="save-product" class="w-full bg-primary text-white py-3 rounded-button font-medium cursor-pointer !rounded-button">
+Ürünü Kaydet
+</button>
+</div>
+</div>
+</div>
+<!-- Bottom Tab Bar -->
+<div class="fixed bottom-0 left-0 right-0 bg-white border-t z-10 w-[375px] mx-auto">
+<div class="grid grid-cols-3 h-16">
+<button id="nav-waiter" class="flex flex-col items-center justify-center text-gray-500 hover:text-primary cursor-pointer">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-user-line"></i>
+</div>
+<span class="text-xs mt-1">Garson</span>
+</button>
+<button id="nav-kitchen" class="flex flex-col items-center justify-center text-gray-500 hover:text-primary cursor-pointer">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-restaurant-line"></i>
+</div>
+<span class="text-xs mt-1">Mutfak</span>
+</button>
+<button id="nav-cashier" class="flex flex-col items-center justify-center text-gray-500 hover:text-primary cursor-pointer">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-money-dollar-circle-line"></i>
+</div>
+<span class="text-xs mt-1">Kasa</span>
+</button>
+</div>
+</div>
+</div>
+<script id="auth-script">
+document.addEventListener('DOMContentLoaded', function() {
+// Initial setup
+let selectedRole = null;
+const roleButtons = document.querySelectorAll('.role-btn');
+const loginBtn = document.getElementById('login-btn');
+const loginError = document.getElementById('login-error');
+// Role selection
+roleButtons.forEach(button => {
+button.addEventListener('click', function() {
+roleButtons.forEach(btn => {
+btn.classList.remove('bg-primary', 'text-white');
+btn.classList.add('bg-gray-100', 'text-gray-700');
+});
+this.classList.remove('bg-gray-100', 'text-gray-700');
+this.classList.add('bg-primary', 'text-white');
+selectedRole = this.id.split('-')[0]; // Extract role name
+});
+});
+// Login functionality
+loginBtn.addEventListener('click', function() {
+const username = document.getElementById('username').value;
+const password = document.getElementById('password').value;
+if (!selectedRole) {
+loginError.textContent = 'Lütfen bir rol seçin';
+loginError.classList.remove('hidden');
+return;
+}
+// Validate credentials
+const validCredentials = {
+waiter: { username: 'garson1', password: 'garson1' },
+kitchen: { username: 'mutfak1', password: 'mutfak1' },
+cashier: { username: 'kasa1', password: 'kasa1' }
+};
+if (username === validCredentials[selectedRole].username &&
+password === validCredentials[selectedRole].password) {
+// Store login info in localStorage
+localStorage.setItem('rms_role', selectedRole);
+localStorage.setItem('rms_username', username);
+// Hide login screen and show appropriate panel
+document.getElementById('login-screen').classList.add('hidden');
+document.getElementById(`${selectedRole}-panel`).classList.remove('hidden');
+// Set active tab
+setActiveTab(selectedRole);
+// Initialize data if not exists
+initializeData();
+// Load appropriate data
+if (selectedRole === 'waiter') {
+loadTables();
+} else if (selectedRole === 'kitchen') {
+loadOrders();
+} else if (selectedRole === 'cashier') {
+loadPaymentTables();
+loadProducts();
+}
+} else {
+loginError.textContent = 'Geçersiz kullanıcı adı veya şifre';
+loginError.classList.remove('hidden');
+}
+});
+// Check if user is already logged in
+const storedRole = localStorage.getItem('rms_role');
+if (storedRole) {
+document.getElementById('login-screen').classList.add('hidden');
+document.getElementById(`${storedRole}-panel`).classList.remove('hidden');
+// Set active tab
+setActiveTab(storedRole);
+// Load appropriate data
+if (storedRole === 'waiter') {
+loadTables();
+} else if (storedRole === 'kitchen') {
+loadOrders();
+} else if (storedRole === 'cashier') {
+loadPaymentTables();
+loadProducts();
+}
+}
+// Set active tab in bottom navigation
+function setActiveTab(role) {
+const navButtons = document.querySelectorAll('[id^="nav-"]');
+navButtons.forEach(btn => {
+btn.classList.remove('text-primary');
+btn.classList.add('text-gray-500');
+});
+document.getElementById(`nav-${role}`).classList.remove('text-gray-500');
+document.getElementById(`nav-${role}`).classList.add('text-primary');
+}
+// Initialize data if not exists
+function initializeData() {
+if (!localStorage.getItem('rms_tables')) {
+// Başlangıçta tüm masalar boş olacak
+const tables = Array(20).fill().map((_, i) => ({
+id: i + 1,
+status: 'empty', // empty, occupied, preparing, ready, call, payment
+order: [],
+note: '',
+total: 0
+}));
+localStorage.setItem('rms_tables', JSON.stringify(tables));
+}
+if (!localStorage.getItem('rms_products')) {
+const products = [
+{ id: 1, name: 'Kebap', price: 120.00, category: 'food', image: 'https://readdy.ai/api/search-image?query=Turkish%2520Kebab%2520on%2520a%2520plate%252C%2520garnished%2520with%2520fresh%2520herbs%2520and%2520vegetables%252C%2520professionally%2520photographed%2520food%2520on%2520white%2520plate%252C%2520restaurant%2520quality%2520presentation%252C%2520isolated%2520on%2520light%2520background&width=100&height=100&seq=1&orientation=squarish', active: true },
+{ id: 2, name: 'Baklava', price: 80.00, category: 'desserts', image: 'https://readdy.ai/api/search-image?query=Baklava%2520dessert%2520with%2520honey%2520and%2520pistachios%252C%2520traditional%2520Turkish%2520sweet%2520pastry%252C%2520professionally%2520photographed%2520food%2520on%2520white%2520plate%252C%2520restaurant%2520quality%2520presentation%252C%2520isolated%2520on%2520light%2520background&width=100&height=100&seq=2&orientation=squarish', active: true },
+{ id: 3, name: 'Çay', price: 15.00, category: 'drinks', image: 'https://readdy.ai/api/search-image?query=Turkish%2520tea%2520in%2520traditional%2520glass%252C%2520hot%2520beverage%252C%2520professionally%2520photographed%2520drink%252C%2520restaurant%2520quality%2520presentation%252C%2520isolated%2520on%2520light%2520background&width=100&height=100&seq=3&orientation=squarish', active: true },
+{ id: 4, name: 'Lahmacun', price: 50.00, category: 'food', image: 'https://readdy.ai/api/search-image?query=Lahmacun%2520Turkish%2520pizza%2520with%2520minced%2520meat%2520and%2520vegetables%252C%2520professionally%2520photographed%2520food%252C%2520restaurant%2520quality%2520presentation%252C%2520isolated%2520on%2520light%2520background&width=100&height=100&seq=4&orientation=squarish', active: true },
+{ id: 5, name: 'Ayran', price: 20.00, category: 'drinks', image: 'https://readdy.ai/api/search-image?query=Ayran%2520yogurt%2520drink%2520in%2520glass%252C%2520traditional%2520Turkish%2520beverage%252C%2520professionally%2520photographed%2520drink%252C%2520restaurant%2520quality%2520presentation%252C%2520isolated%2520on%2520light%2520background&width=100&height=100&seq=5&orientation=squarish', active: true },
+{ id: 6, name: 'Künefe', price: 70.00, category: 'desserts', image: 'https://readdy.ai/api/search-image?query=Kunefe%2520dessert%2520with%2520cheese%2520and%2520syrup%252C%2520traditional%2520Turkish%2520sweet%252C%2520professionally%2520photographed%2520food%2520on%2520white%2520plate%252C%2520restaurant%2520quality%2520presentation%252C%2520isolated%2520on%2520light%2520background&width=100&height=100&seq=6&orientation=squarish', active: true },
+{ id: 7, name: 'Mantı', price: 90.00, category: 'food', image: 'https://readdy.ai/api/search-image?query=Manti%2520Turkish%2520dumplings%2520with%2520yogurt%2520sauce%252C%2520professionally%2520photographed%2520food%2520on%2520white%2520plate%252C%2520restaurant%2520quality%2520presentation%252C%2520isolated%2520on%2520light%2520background&width=100&height=100&seq=7&orientation=squarish', active: true },
+{ id: 8, name: 'Türk Kahvesi', price: 30.00, category: 'drinks', image: 'https://readdy.ai/api/search-image?query=Turkish%2520coffee%2520in%2520traditional%2520copper%2520pot%2520and%2520cup%252C%2520professionally%2520photographed%2520drink%252C%2520restaurant%2520quality%2520presentation%252C%2520isolated%2520on%2520light%2520background&width=100&height=100&seq=8&orientation=squarish', active: true }
+];
+localStorage.setItem('rms_products', JSON.stringify(products));
+}
+// Her oturumda örnek siparişleri temizle
+localStorage.removeItem('rms_payment_history');
+}
+});
+</script>
+<script id="waiter-script">
+document.addEventListener('DOMContentLoaded', function() {
+// Waiter panel functionality
+const waiterLogoutBtn = document.getElementById('waiter-logout');
+const refreshTablesBtn = document.getElementById('refresh-tables');
+const tableDetailModal = document.getElementById('table-detail-modal');
+const closeModalBtn = document.getElementById('close-modal');
+const addItemsBtn = document.getElementById('add-items-btn');
+const addItemsModal = document.getElementById('add-items-modal');
+const closeAddItemsModalBtn = document.getElementById('close-add-items-modal');
+const searchProductsInput = document.getElementById('search-products');
+const sendOrderBtn = document.getElementById('send-order');
+const markDeliveredBtn = document.getElementById('mark-delivered');
+const markPaymentBtn = document.getElementById('mark-payment');
+const clearTableBtn = document.getElementById('clear-table');
+const qrResponseBtn = document.getElementById('qr-response');
+let currentTableId = null;
+let filteredProducts = [];
+
+// Load tables
+window.loadTables = function() {
+  const tablesGrid = document.getElementById('tables-grid');
+  const tables = JSON.parse(localStorage.getItem('rms_tables') || '[]');
+  tablesGrid.innerHTML = '';
+  
+  tables.forEach(table => {
+    const tableCard = document.createElement('div');
+    tableCard.className = `table-card rounded-lg p-3 cursor-pointer`;
+    
+    // Set background color based on status
+    let bgColor = 'bg-gray-200';
+    let statusText = 'Boş';
+    
+    if (table.status === 'occupied') {
+      bgColor = 'bg-primary';
+      statusText = 'Dolu';
+    } else if (table.status === 'preparing') {
+      bgColor = 'bg-yellow-400';
+      statusText = 'Hazırlanıyor';
+    } else if (table.status === 'ready') {
+      bgColor = 'bg-green-500';
+      statusText = 'Hazır';
+      if (table.readyTime) {
+        const readyTime = Math.floor((new Date().getTime() - table.readyTime) / 60000);
+        statusText = `Hazır ${readyTime}dk`;
+      }
+    } else if (table.status === 'payment') {
+      bgColor = 'bg-blue-500';
+      statusText = 'Ödeme';
+    } else if (table.status === 'call') {
+      bgColor = 'bg-red-500';
+      statusText = 'Çağrı';
+    }
+    
+    tableCard.classList.add(bgColor);
+    tableCard.innerHTML = `
+      <div class="text-center">
+        <div class="font-medium text-white">${table.id}</div>
+        <div class="text-xs text-white mt-1">${statusText}</div>
+        ${table.partialPayment ? '<div class="text-xs text-white mt-1">Kısmi Ödeme</div>' : ''}
+      </div>
+    `;
+    
+    tableCard.addEventListener('click', function() {
+      openTableDetail(table.id);
+    });
+    
+    tablesGrid.appendChild(tableCard);
+  });
+};
+
+// Open table detail modal
+function openTableDetail(tableId) {
+  currentTableId = tableId;
+  const tables = JSON.parse(localStorage.getItem('rms_tables') || '[]');
+  const table = tables.find(t => t.id === tableId);
+  
+  // Set table number
+  document.getElementById('modal-table-number').textContent = `Masa ${tableId}`;
+  
+  // Load current order
+  const currentOrderItems = document.getElementById('current-order-items');
+  if (table.order && table.order.length > 0) {
+    currentOrderItems.innerHTML = table.order.map(item => `
+      <div class="flex justify-between">
+        <span class="text-sm">${item.quantity}x ${item.name}</span>
+        <span class="text-sm">₺${(item.price * item.quantity).toFixed(2)}</span>
+      </div>
+    `).join('');
+    document.getElementById('order-total').textContent = `₺${table.total.toFixed(2)}`;
+  } else {
+    currentOrderItems.innerHTML = `<div class="text-sm text-gray-500 italic">Henüz ürün eklenmedi</div>`;
+    document.getElementById('order-total').textContent = '₺0.00';
+  }
+  
+  // Set note
+  document.getElementById('order-note').value = table.note || '';
+  
+  // Show/hide buttons based on status
+  if (table.status === 'empty') {
+    sendOrderBtn.textContent = 'Masa Aç & Sipariş Gönder';
+    sendOrderBtn.classList.remove('hidden');
+    markDeliveredBtn.classList.add('hidden');
+    markPaymentBtn.classList.add('hidden');
+    clearTableBtn.classList.add('hidden');
+  } else if (table.status === 'occupied' || table.status === 'preparing') {
+    sendOrderBtn.textContent = 'Siparişi Güncelle';
+    sendOrderBtn.classList.remove('hidden');
+    markDeliveredBtn.classList.add('hidden');
+    markPaymentBtn.classList.remove('hidden');
+    clearTableBtn.classList.remove('hidden');
+  } else if (table.status === 'ready') {
+    sendOrderBtn.textContent = 'Siparişi Güncelle';
+    sendOrderBtn.classList.remove('hidden');
+    markDeliveredBtn.classList.remove('hidden');
+    markPaymentBtn.classList.remove('hidden');
+    clearTableBtn.classList.remove('hidden');
+  } else if (table.status === 'payment') {
+    sendOrderBtn.textContent = 'Sipariş Gönder';
+    sendOrderBtn.classList.remove('hidden');
+    markDeliveredBtn.classList.add('hidden');
+    markPaymentBtn.classList.add('hidden');
+    clearTableBtn.classList.remove('hidden');
+  } else {
+    sendOrderBtn.textContent = 'Sipariş Gönder';
+    sendOrderBtn.classList.remove('hidden');
+    markDeliveredBtn.classList.add('hidden');
+    markPaymentBtn.classList.add('hidden');
+    clearTableBtn.classList.remove('hidden');
+  }
+  
+  // Show/hide QR response button
+  qrResponseBtn.classList.toggle('hidden', table.status !== 'call');
+  
+  // Show modal
+  tableDetailModal.classList.remove('hidden');
+  
+  // Add event listeners for add items modal
+  addItemsBtn.addEventListener('click', function() {
+    addItemsModal.classList.remove('hidden');
+    loadProductSelection();
+  });
+  
+  closeAddItemsModalBtn.addEventListener('click', function() {
+    addItemsModal.classList.add('hidden');
+  });
+  
+  // Search products
+  searchProductsInput.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    loadProductSelection(searchTerm);
+  });
+  
+  // Category filter
+  document.querySelectorAll('.category-filter').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.category-filter').forEach(b => {
+        b.classList.remove('bg-primary', 'text-white');
+        b.classList.add('bg-gray-100', 'text-gray-700');
+      });
+      this.classList.remove('bg-gray-100', 'text-gray-700');
+      this.classList.add('bg-primary', 'text-white');
+      const category = this.getAttribute('data-category');
+      loadProductSelection(searchProductsInput.value.toLowerCase(), category);
+    });
+  });
+}
+
+// Load product selection
+function loadProductSelection(searchTerm = '', category = 'all') {
+  const productSelection = document.getElementById('product-selection');
+  const products = JSON.parse(localStorage.getItem('rms_products') || '[]');
+  productSelection.innerHTML = '';
+  
+  filteredProducts = products.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(searchTerm);
+    const matchesCategory = category === 'all' || p.category === category;
+    return p.active && matchesSearch && matchesCategory;
+  });
+  
+  filteredProducts.forEach(product => {
+    const productBtn = document.createElement('div');
+    productBtn.className = 'bg-white rounded-lg shadow p-3 cursor-pointer transform transition-transform hover:scale-105';
+    productBtn.innerHTML = `
+      <img src="${product.image}" alt="${product.name}" class="w-full h-24 rounded-lg mb-2 object-cover">
+      <div class="text-sm font-medium">${product.name}</div>
+      <div class="flex items-center justify-between mt-1">
+        <div class="text-xs text-gray-500">₺${product.price.toFixed(2)}</div>
+        <button class="add-to-order-btn w-6 h-6 bg-primary rounded-full text-white flex items-center justify-center">
+          <i class="ri-add-line"></i>
+        </button>
+      </div>
+    `;
+    
+    productBtn.querySelector('.add-to-order-btn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      addProductToOrder(product);
+    });
+    
+    productSelection.appendChild(productBtn);
+  });
+}
+
+// Add product to order
+function addProductToOrder(product) {
+  const tables = JSON.parse(localStorage.getItem('rms_tables') || '[]');
+  const tableIndex = tables.findIndex(t => t.id === currentTableId);
+  
+  if (tableIndex !== -1) {
+    if (!tables[tableIndex].order) {
+      tables[tableIndex].order = [];
+    }
+    
+    const existingItemIndex = tables[tableIndex].order.findIndex(item => item.id === product.id);
+    
+    if (existingItemIndex !== -1) {
+      // Increment quantity if product already exists
+      tables[tableIndex].order[existingItemIndex].quantity += 1;
+    } else {
+      // Add new product
+      tables[tableIndex].order.push({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: 1
+      });
+    }
+    
+    // Update total
+    tables[tableIndex].total = tables[tableIndex].order.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    // Save to localStorage
+    localStorage.setItem('rms_tables', JSON.stringify(tables));
+    
+    // Refresh order display
+    openTableDetail(currentTableId);
+    
+    // Notify with small animation
+    const addedNotification = document.createElement('div');
+    addedNotification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-bounce';
+    addedNotification.textContent = 'Ürün eklendi';
+    document.body.appendChild(addedNotification);
+    
+    setTimeout(() => {
+      addedNotification.remove();
+    }, 2000);
+  }
+}
+
+// Send order to kitchen
+sendOrderBtn.addEventListener('click', function() {
+  const tables = JSON.parse(localStorage.getItem('rms_tables') || '[]');
+  const tableIndex = tables.findIndex(t => t.id === currentTableId);
+  
+  if (tableIndex !== -1) {
+    // Update note
+    tables[tableIndex].note = document.getElementById('order-note').value;
+    
+    // Update status
+    if (tables[tableIndex].status === 'empty' && tables[tableIndex].order && tables[tableIndex].order.length > 0) {
+      tables[tableIndex].status = 'occupied';
+    }
+    
+    if (tables[tableIndex].order && tables[tableIndex].order.length > 0) {
+      tables[tableIndex].status = 'preparing';
+      tables[tableIndex].orderTime = new Date().getTime();
+    }
+    
+    // Save to localStorage and trigger real-time update
+    localStorage.setItem('rms_tables', JSON.stringify(tables));
+    localStorage.setItem('rms_last_update', new Date().getTime());
+    
+    // Close modal and refresh all panels
+    tableDetailModal.classList.add('hidden');
+    loadTables();
+    
+    // Notify
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-primary text-white px-4 py-2 rounded-lg shadow-lg z-50';
+    notification.textContent = 'Sipariş mutfağa gönderildi';
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, 2000);
+    
+    // Update other panels if functions are available
+    if (typeof loadOrders === 'function') loadOrders();
+    if (typeof loadPaymentTables === 'function') loadPaymentTables();
+  }
+});
+
+// Mark as delivered
+markDeliveredBtn.addEventListener('click', function() {
+  const tables = JSON.parse(localStorage.getItem('rms_tables') || '[]');
+  const tableIndex = tables.findIndex(t => t.id === currentTableId);
+  
+  if (tableIndex !== -1 && tables[tableIndex].status === 'ready') {
+    // Update status
+    tables[tableIndex].status = 'occupied';
+    tables[tableIndex].deliveredTime = new Date().getTime();
+    
+    // Save to localStorage
+    localStorage.setItem('rms_tables', JSON.stringify(tables));
+    
+    // Close modal and refresh tables
+    tableDetailModal.classList.add('hidden');
+    loadTables();
+    
+    // Notify
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+    notification.textContent = 'Sipariş teslim edildi';
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, 2000);
+  }
+});
+
+// Send to cashier
+markPaymentBtn.addEventListener('click', function() {
+  const tables = JSON.parse(localStorage.getItem('rms_tables') || '[]');
+  const tableIndex = tables.findIndex(t => t.id === currentTableId);
+  
+  if (tableIndex !== -1) {
+    // Update status
+    tables[tableIndex].status = 'payment';
+    tables[tableIndex].paymentRequestTime = new Date().getTime();
+    
+    // Save to localStorage
+    localStorage.setItem('rms_tables', JSON.stringify(tables));
+    
+    // Close modal and refresh tables
+    tableDetailModal.classList.add('hidden');
+    loadTables();
+    
+    // Notify
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+    notification.textContent = 'Ödeme için kasaya gönderildi';
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, 2000);
+  }
+});
+
+// Clear table
+clearTableBtn.addEventListener('click', function() {
+  const tables = JSON.parse(localStorage.getItem('rms_tables') || '[]');
+  const tableIndex = tables.findIndex(t => t.id === currentTableId);
+  
+  if (tableIndex !== -1) {
+    if (tables[tableIndex].status !== 'empty' && tables[tableIndex].order && tables[tableIndex].order.length > 0) {
+      // Confirm before clearing
+      if (!confirm('Bu masayı temizlemek istediğinize emin misiniz? Tüm sipariş bilgileri silinecektir.')) {
+        return;
+      }
+    }
+    
+    // Reset table
+    tables[tableIndex].status = 'empty';
+    tables[tableIndex].order = [];
+    tables[tableIndex].note = '';
+    tables[tableIndex].total = 0;
+    tables[tableIndex].partialPayment = false;
+    tables[tableIndex].readyTime = null;
+    tables[tableIndex].orderTime = null;
+    tables[tableIndex].deliveredTime = null;
+    tables[tableIndex].paymentRequestTime = null;
+    
+    // Save to localStorage
+    localStorage.setItem('rms_tables', JSON.stringify(tables));
+    
+    // Close modal and refresh tables
+    tableDetailModal.classList.add('hidden');
+    loadTables();
+    
+    // Notify
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-gray-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+    notification.textContent = 'Masa temizlendi';
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, 2000);
+  }
+});
+
+// QR response
+qrResponseBtn.addEventListener('click', function() {
+  const tables = JSON.parse(localStorage.getItem('rms_tables') || '[]');
+  const tableIndex = tables.findIndex(t => t.id === currentTableId);
+  
+  if (tableIndex !== -1 && tables[tableIndex].status === 'call') {
+    // Update status back to previous
+    tables[tableIndex].status = tables[tableIndex].previousStatus || 'occupied';
+    tables[tableIndex].responseTime = new Date().getTime();
+    
+    // Save to localStorage
+    localStorage.setItem('rms_tables', JSON.stringify(tables));
+    
+    // Close modal and refresh tables
+    tableDetailModal.classList.add('hidden');
+    loadTables();
+    
+    // Notify
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-primary text-white px-4 py-2 rounded-lg shadow-lg z-50';
+    notification.textContent = 'Çağrıya yanıt verildi';
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, 2000);
+  }
+});
+
+// Close modal
+closeModalBtn.addEventListener('click', function() {
+  tableDetailModal.classList.add('hidden');
+});
+
+// Refresh tables
+refreshTablesBtn.addEventListener('click', loadTables);
+
+// Real-time updates every 3 seconds
+setInterval(loadTables, 3000);
+
+// Logout
+waiterLogoutBtn.addEventListener('click', function() {
+  localStorage.removeItem('rms_role');
+  localStorage.removeItem('rms_username');
+  // Keep the tables data in localStorage
+  window.location.reload();
+});
+
+// Initial load
+if (document.getElementById('waiter-panel').classList.contains('hidden') === false) {
+  loadTables();
+}
+});
+</script>
+<script id="kitchen-script">
+document.addEventListener('DOMContentLoaded', function() {
+// Kitchen panel functionality
+const kitchenLogoutBtn = document.getElementById('kitchen-logout');
+const refreshOrdersBtn = document.getElementById('refresh-orders');
+
+// Load orders
+window.loadOrders = function() {
+  const activeOrders = document.getElementById('active-orders');
+  const tables = JSON.parse(localStorage.getItem('rms_tables') || '[]');
+  
+  // Get tables with preparing status
+  const preparingTables = tables.filter(table => table.status === 'preparing');
+  
+  if (preparingTables.length === 0) {
+    activeOrders.innerHTML = `
+      <div class="text-center py-8 text-gray-500">
+        <div class="w-16 h-16 mx-auto mb-4">
+          <i class="ri-restaurant-line ri-3x opacity-50"></i>
+        </div>
+        <p>Şu anda aktif sipariş yok</p>
+        <p class="text-xs mt-2">Yeni siparişler burada görünecek</p>
+      </div>
+    `;
+    return;
+  }
+  
+  activeOrders.innerHTML = '';
+  
+  // Sort by order time (newest first)
+  preparingTables.sort((a, b) => {
+    const timeA = a.orderTime || 0;
+    const timeB = b.orderTime || 0;
+    return timeB - timeA;
+  });
+  
+  preparingTables.forEach(table => {
+    const orderCard = document.createElement('div');
+    orderCard.className = 'bg-white rounded-lg shadow p-4 transition-all hover:shadow-md';
+    
+    // Calculate order time
+    let timeText = 'Yeni sipariş';
+    if (table.orderTime) {
+      const minutes = Math.floor((new Date().getTime() - table.orderTime) / 60000);
+      if (minutes === 0) {
+        timeText = 'Az önce';
+      } else if (minutes === 1) {
+        timeText = '1 dakika önce';
+      } else {
+        timeText = `${minutes} dakika önce`;
+      }
+    }
+    
+    orderCard.innerHTML = `
+      <div class="flex justify-between items-center mb-3">
+        <div class="flex items-center">
+          <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-medium mr-2">${table.id}</div>
+          <div class="text-sm font-medium">Masa ${table.id}</div>
+        </div>
+        <div class="text-xs text-gray-500">${timeText}</div>
+      </div>
+      <div class="space-y-2 mb-3">
+        ${table.order.map(item => `
+          <div class="flex justify-between items-center bg-gray-50 rounded-lg p-2">
+            <div class="flex items-center">
+              <div class="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-primary font-medium mr-2">${item.quantity}</div>
+              <span class="text-sm font-medium">${item.name}</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      ${table.note ? `
+        <div class="bg-yellow-50 p-2 rounded-lg mb-3 border border-yellow-100">
+          <div class="text-xs font-medium text-yellow-700 mb-1">Sipariş Notu:</div>
+          <div class="text-sm text-yellow-900">${table.note}</div>
+        </div>
+      ` : ''}
+      <button class="ready-btn w-full bg-success text-white py-2 rounded-button text-sm font-medium cursor-pointer !rounded-button transition-all hover:bg-success/90" data-table-id="${table.id}">
+        <i class="ri-check-line mr-1"></i> Hazır Olarak İşaretle
+      </button>
+    `;
+    
+    activeOrders.appendChild(orderCard);
+  });
+  
+  // Add event listeners to ready buttons
+  document.querySelectorAll('.ready-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const tableId = parseInt(this.getAttribute('data-table-id'));
+      markOrderReady(tableId);
+    });
+  });
+};
+
+// Mark order as ready
+function markOrderReady(tableId) {
+  const tables = JSON.parse(localStorage.getItem('rms_tables') || '[]');
+  const tableIndex = tables.findIndex(t => t.id === tableId);
+  
+  if (tableIndex !== -1 && tables[tableIndex].status === 'preparing') {
+    // Update status and add timestamp
+    tables[tableIndex].status = 'ready';
+    tables[tableIndex].readyTime = new Date().getTime();
+    
+    // Save to localStorage and trigger real-time update
+    localStorage.setItem('rms_tables', JSON.stringify(tables));
+    localStorage.setItem('rms_last_update', new Date().getTime());
+    
+    // Refresh orders
+    loadOrders();
+    
+    // Show notification
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-success text-white px-4 py-2 rounded-lg shadow-lg z-50';
+    notification.innerHTML = `<i class="ri-check-line mr-1"></i> Masa ${tableId} siparişi hazır olarak işaretlendi`;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.remove();
+    }, 2000);
+    
+    // Play sound alert
+    const audio = new Audio('data:audio/mp3;base64,SUQzAwAAAAAAJlRQRTEAAAAcAAAAU291bmRKYXkuY29tIFNvdW5kIEVmZmVjdHMA//uQxAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAADAAAGhgBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVWqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr///////////////////////////////////////////8AAAA8TEFNRTMuOTlyAc0AAAAAAAAAABSAJAJAQgAAgAAAA+blcWwSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQxAADwAABpAAAACAAADSAAAAETEFNRTMuOTkuNVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU=');
+    audio.play().catch(e => console.log('Audio play failed: ', e));
+    
+    // Refresh other panels if functions are available
+    if (typeof loadTables === 'function') loadTables();
+    if (typeof loadPaymentTables === 'function') loadPaymentTables();
+  }
+}
+
+// Start polling for updates
+setInterval(loadOrders, 3000);
+
+// Refresh orders
+refreshOrdersBtn.addEventListener('click', function() {
+  loadOrders();
+  
+  // Animation for refresh button
+  this.classList.add('animate-spin');
+  setTimeout(() => {
+    this.classList.remove('animate-spin');
+  }, 500);
+  
+  // Show notification
+  const notification = document.createElement('div');
+  notification.className = 'fixed top-4 right-4 bg-secondary text-white px-4 py-2 rounded-lg shadow-lg z-50';
+  notification.innerHTML = '<i class="ri-refresh-line mr-1"></i> Siparişler yenilendi';
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.remove();
+  }, 2000);
+});
+
+// Logout
+kitchenLogoutBtn.addEventListener('click', function() {
+  localStorage.removeItem('rms_role');
+  localStorage.removeItem('rms_username');
+  window.location.reload();
+});
+
+// Initial load
+if (document.getElementById('kitchen-panel').classList.contains('hidden') === false) {
+  loadOrders();
+}
+
+});
+</script>
+<script id="cashier-script">
+document.addEventListener('DOMContentLoaded', function() {
+// Cashier panel functionality
+const cashierLogoutBtn = document.getElementById('cashier-logout');
+const refreshCashierBtn = document.getElementById('refresh-cashier');
+const tabPayments = document.getElementById('tab-payments');
+const tabProducts = document.getElementById('tab-products');
+const paymentsContent = document.getElementById('payments-content');
+const productsContent = document.getElementById('products-content');
+const paymentModal = document.getElementById('payment-modal');
+const closePaymentModalBtn = document.getElementById('close-payment-modal');
+const productModal = document.getElementById('product-modal');
+const closeProductModalBtn = document.getElementById('close-product-modal');
+const addProductBtn = document.getElementById('add-product-btn');
+const saveProductBtn = document.getElementById('save-product');
+let currentPaymentTableId = null;
+let currentProductId = null;
+let selectedPaymentMethod = null;
+// Tab switching
+tabPayments.addEventListener('click', function() {
+tabPayments.classList.add('text-primary', 'border-primary');
+tabPayments.classList.remove('text-gray-500');
+tabProducts.classList.remove('text-primary', 'border-primary');
+tabProducts.classList.add('text-gray-500');
+paymentsContent.classList.remove('hidden');
+productsContent.classList.add('hidden');
+loadPaymentTables();
+});
+tabProducts.addEventListener('click', function() {
+tabProducts.classList.add('text-primary', 'border-primary');
+tabProducts.classList.remove('text-gray-500');
+tabPayments.classList.remove('text-primary', 'border-primary');
+tabPayments.classList.add('text-gray-500');
+productsContent.classList.remove('hidden');
+paymentsContent.classList.add('hidden');
+loadProducts();
+});
+// Load tables waiting for payment
+window.loadPaymentTables = function() {
+const paymentTables = document.getElementById('payment-tables');
+const tables = JSON.parse(localStorage.getItem('rms_tables') || '[]');
+// Get tables with payment status
+const tablesForPayment = tables.filter(table => table.status === 'payment' || table.status === 'occupied');
+if (tablesForPayment.length === 0) {
+paymentTables.innerHTML = `
+<div class="text-center py-8 text-gray-500">
+Ödeme bekleyen masa yok
+</div>
+`;
+return;
+}
+paymentTables.innerHTML = '';
+tablesForPayment.forEach(table => {
+const tableCard = document.createElement('div');
+tableCard.className = 'bg-white rounded-lg shadow p-4';
+tableCard.innerHTML = `
+<div class="flex justify-between items-center mb-3">
+<div class="flex items-center">
+<div class="w-8 h-8 ${table.status === 'payment' ? 'bg-blue-500' : 'bg-primary'} rounded-full flex items-center justify-center text-white font-medium mr-2">${table.id}</div>
+<div class="text-sm font-medium">Table ${table.id}</div>
+</div>
+<div class="text-sm font-medium">$${table.total.toFixed(2)}</div>
+</div>
+<div class="space-y-1 mb-3">
+${table.order.map(item => `
+<div class="flex justify-between text-xs text-gray-600">
+<span>${item.quantity}x ${item.name}</span>
+<span>$${(item.price * item.quantity).toFixed(2)}</span>
+</div>
+`).join('')}
+</div>
+<button class="process-payment-btn w-full bg-primary text-white py-2 rounded-button text-sm font-medium cursor-pointer !rounded-button" data-table-id="${table.id}">
+Process Payment
+</button>
+`;
+paymentTables.appendChild(tableCard);
+});
+// Add event listeners to payment buttons
+document.querySelectorAll('.process-payment-btn').forEach(btn => {
+btn.addEventListener('click', function() {
+const tableId = parseInt(this.getAttribute('data-table-id'));
+openPaymentModal(tableId);
+});
+});
+};
+// Open payment modal
+function openPaymentModal(tableId) {
+currentPaymentTableId = tableId;
+const tables = JSON.parse(localStorage.getItem('rms_tables') || '[]');
+const table = tables.find(t => t.id === tableId);
+// Set table number
+document.getElementById('payment-table-number').textContent = `Table ${tableId}`;
+// Load order items
+const paymentOrderItems = document.getElementById('payment-order-items');
+paymentOrderItems.innerHTML = table.order.map(item => `
+<div class="flex justify-between">
+<span class="text-sm">${item.quantity}x ${item.name}</span>
+<span class="text-sm">₺${(item.price * item.quantity).toFixed(2)}</span>
+</div>
+`).join('');
+// Set total
+document.getElementById('payment-total').textContent = `₺${table.total.toFixed(2)}`;
+// Reset payment method
+document.querySelectorAll('.payment-method-btn').forEach(btn => {
+btn.classList.remove('bg-primary', 'text-white');
+btn.classList.add('bg-gray-100', 'text-gray-700');
+});
+selectedPaymentMethod = null;
+// Hide payment sections
+document.getElementById('cash-payment-section').classList.add('hidden');
+document.getElementById('split-payment-section').classList.add('hidden');
+// Reset input fields
+document.getElementById('cash-amount').value = '';
+document.getElementById('split-amount').value = '';
+document.getElementById('change-amount').textContent = '$0.00';
+document.getElementById('remaining-amount').textContent = '$0.00';
+// Disable complete payment button
+document.getElementById('complete-payment').disabled = true;
+document.getElementById('complete-payment').classList.add('opacity-50');
+// Show modal
+paymentModal.classList.remove('hidden');
+}
+// Payment method selection
+document.querySelectorAll('.payment-method-btn').forEach(btn => {
+btn.addEventListener('click', function() {
+document.querySelectorAll('.payment-method-btn').forEach(b => {
+b.classList.remove('bg-primary', 'text-white');
+b.classList.add('bg-gray-100', 'text-gray-700');
+});
+this.classList.remove('bg-gray-100', 'text-gray-700');
+this.classList.add('bg-primary', 'text-white');
+selectedPaymentMethod = this.getAttribute('data-method');
+// Show/hide payment sections
+if (selectedPaymentMethod === 'cash') {
+document.getElementById('cash-payment-section').classList.remove('hidden');
+document.getElementById('split-payment-section').classList.add('hidden');
+// Enable complete payment button
+document.getElementById('complete-payment').disabled = false;
+document.getElementById('complete-payment').classList.remove('opacity-50');
+} else if (selectedPaymentMethod === 'card') {
+document.getElementById('cash-payment-section').classList.add('hidden');
+document.getElementById('split-payment-section').classList.add('hidden');
+// Enable complete payment button
+document.getElementById('complete-payment').disabled = false;
+document.getElementById('complete-payment').classList.remove('opacity-50');
+} else if (selectedPaymentMethod === 'split') {
+document.getElementById('cash-payment-section').classList.add('hidden');
+document.getElementById('split-payment-section').classList.remove('hidden');
+// Enable complete payment button
+document.getElementById('complete-payment').disabled = false;
+document.getElementById('complete-payment').classList.remove('opacity-50');
+}
+});
+});
+// Calculate change
+document.getElementById('cash-amount').addEventListener('input', function() {
+const tables = JSON.parse(localStorage.getItem('rms_tables') || '[]');
+const table = tables.find(t => t.id === currentPaymentTableId);
+const cashAmount = parseFloat(this.value) || 0;
+const change = cashAmount - table.total;
+document.getElementById('change-amount').textContent = `₺${Math.max(0, change).toFixed(2)}`;
+});
+// Calculate remaining amount
+document.getElementById('split-amount').addEventListener('input', function() {
+const tables = JSON.parse(localStorage.getItem('rms_tables') || '[]');
+const table = tables.find(t => t.id === currentPaymentTableId);
+const splitAmount = parseFloat(this.value) || 0;
+const remaining = table.total - splitAmount;
+document.getElementById('remaining-amount').textContent = `₺${Math.max(0, remaining).toFixed(2)}`;
+});
+// Complete payment
+document.getElementById('complete-payment').addEventListener('click', function() {
+if (!selectedPaymentMethod) return;
+const tables = JSON.parse(localStorage.getItem('rms_tables') || '[]');
+const tableIndex = tables.findIndex(t => t.id === currentPaymentTableId);
+if (tableIndex !== -1) {
+if (selectedPaymentMethod === 'split') {
+const splitAmount = parseFloat(document.getElementById('split-amount').value) || 0;
+const remaining = tables[tableIndex].total - splitAmount;
+if (remaining > 0) {
+// Update total and payment status
+tables[tableIndex].total = remaining;
+tables[tableIndex].partialPayment = true;
+tables[tableIndex].lastPaymentMethod = selectedPaymentMethod;
+tables[tableIndex].lastPaymentAmount = splitAmount;
+tables[tableIndex].lastPaymentTime = new Date().getTime();
+// Save to localStorage and trigger real-time update
+localStorage.setItem('rms_tables', JSON.stringify(tables));
+localStorage.setItem('rms_last_update', new Date().getTime());
+// Close modal and refresh all panels
+paymentModal.classList.add('hidden');
+loadPaymentTables();
+if (typeof loadTables === 'function') loadTables();
+if (typeof loadOrders === 'function') loadOrders();
+return;
+}
+}
+// Store payment info before resetting
+const paymentInfo = {
+tableId: tables[tableIndex].id,
+order: tables[tableIndex].order,
+total: tables[tableIndex].total,
+paymentMethod: selectedPaymentMethod,
+paymentTime: new Date().getTime()
+};
+// Store payment history
+const paymentHistory = JSON.parse(localStorage.getItem('rms_payment_history') || '[]');
+paymentHistory.push(paymentInfo);
+localStorage.setItem('rms_payment_history', JSON.stringify(paymentHistory));
+// Reset table
+tables[tableIndex].status = 'empty';
+tables[tableIndex].order = [];
+tables[tableIndex].note = '';
+tables[tableIndex].total = 0;
+tables[tableIndex].partialPayment = false;
+tables[tableIndex].lastPaymentMethod = null;
+tables[tableIndex].lastPaymentAmount = null;
+tables[tableIndex].lastPaymentTime = null;
+// Save to localStorage and trigger real-time update
+localStorage.setItem('rms_tables', JSON.stringify(tables));
+localStorage.setItem('rms_last_update', new Date().getTime());
+// Close modal and refresh all panels
+paymentModal.classList.add('hidden');
+loadPaymentTables();
+if (typeof loadTables === 'function') loadTables();
+if (typeof loadOrders === 'function') loadOrders();
+}
+});
+// Start polling for updates
+setInterval(loadPaymentTables, 1000);
+// Close payment modal
+closePaymentModalBtn.addEventListener('click', function() {
+paymentModal.classList.add('hidden');
+});
+// Load products
+window.loadProducts = function() {
+const productList = document.getElementById('product-list');
+const products = JSON.parse(localStorage.getItem('rms_products') || '[]');
+productList.innerHTML = '';
+products.forEach(product => {
+const productCard = document.createElement('div');
+productCard.className = 'bg-white rounded-lg shadow p-3 flex items-center';
+productCard.innerHTML = `
+<img src="${product.image}" alt="${product.name}" class="w-12 h-12 rounded-lg mr-3 object-cover">
+<div class="flex-1">
+<div class="font-medium">${product.name}</div>
+<div class="text-sm text-gray-500">₺${product.price.toFixed(2)} · ${product.category}</div>
+</div>
+<div class="flex items-center">
+<div class="w-10 h-6 bg-gray-200 rounded-full flex items-center ${product.active ? 'justify-end bg-green-100' : 'justify-start bg-gray-200'} mr-2 cursor-pointer product-toggle" data-product-id="${product.id}">
+<div class="w-5 h-5 rounded-full ${product.active ? 'bg-green-500' : 'bg-gray-400'} shadow"></div>
+</div>
+<button class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-primary cursor-pointer edit-product" data-product-id="${product.id}">
+<i class="ri-edit-line"></i>
+</button>
+</div>
+`;
+productList.appendChild(productCard);
+});
+// Add event listeners to product toggles
+document.querySelectorAll('.product-toggle').forEach(toggle => {
+toggle.addEventListener('click', function() {
+const productId = parseInt(this.getAttribute('data-product-id'));
+toggleProductStatus(productId);
+});
+});
+// Add event listeners to edit buttons
+document.querySelectorAll('.edit-product').forEach(btn => {
+btn.addEventListener('click', function() {
+const productId = parseInt(this.getAttribute('data-product-id'));
+openProductModal(productId);
+});
+});
+};
+// Toggle product status
+function toggleProductStatus(productId) {
+const products = JSON.parse(localStorage.getItem('rms_products') || '[]');
+const productIndex = products.findIndex(p => p.id === productId);
+if (productIndex !== -1) {
+// Toggle active status
+products[productIndex].active = !products[productIndex].active;
+// Save to localStorage
+localStorage.setItem('rms_products', JSON.stringify(products));
+// Refresh products
+loadProducts();
+}
+}
+// Open product modal
+function openProductModal(productId = null) {
+currentProductId = productId;
+if (productId) {
+// Edit existing product
+const products = JSON.parse(localStorage.getItem('rms_products') || '[]');
+const product = products.find(p => p.id === productId);
+document.getElementById('product-modal-title').textContent = 'Edit Product';
+document.getElementById('product-name').value = product.name;
+document.getElementById('product-price').value = product.price;
+document.getElementById('product-category').value = product.category;
+document.getElementById('product-image').value = product.image;
+document.getElementById('product-active').checked = product.active;
+} else {
+// Add new product
+document.getElementById('product-modal-title').textContent = 'Add New Product';
+document.getElementById('product-name').value = '';
+document.getElementById('product-price').value = '';
+document.getElementById('product-category').value = 'food';
+document.getElementById('product-image').value = '';
+document.getElementById('product-active').checked = true;
+}
+// Show modal
+productModal.classList.remove('hidden');
+}
+// Add new product button
+addProductBtn.addEventListener('click', function() {
+openProductModal();
+});
+// Save product
+saveProductBtn.addEventListener('click', function() {
+const name = document.getElementById('product-name').value;
+const price = parseFloat(document.getElementById('product-price').value);
+const category = document.getElementById('product-category').value;
+const image = document.getElementById('product-image').value;
+const active = document.getElementById('product-active').checked;
+if (!name || isNaN(price)) {
+return;
+}
+const products = JSON.parse(localStorage.getItem('rms_products') || '[]');
+if (currentProductId) {
+// Update existing product
+const productIndex = products.findIndex(p => p.id === currentProductId);
+if (productIndex !== -1) {
+products[productIndex] = {
+id: currentProductId,
+name,
+price,
+category,
+image,
+active
+};
+}
+} else {
+// Add new product
+const newProductId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+products.push({
+id: newProductId,
+name,
+price,
+category,
+image: image || `https://readdy.ai/api/search-image?query=$%7BencodeURIComponent%28name%29%7D%2520food%2520or%2520drink%2520item%252C%2520professionally%2520photographed%2520on%2520white%2520plate%252C%2520restaurant%2520quality%2520presentation%252C%2520isolated%2520on%2520light%2520background&width=100&height=100&seq=${newProductId}&orientation=squarish`,
+active
+});
+}
+// Save to localStorage
+localStorage.setItem('rms_products', JSON.stringify(products));
+// Close modal and refresh products
+productModal.classList.add('hidden');
+loadProducts();
+});
+// Close product modal
+closeProductModalBtn.addEventListener('click', function() {
+productModal.classList.add('hidden');
+});
+// Refresh cashier data
+refreshCashierBtn.addEventListener('click', function() {
+if (paymentsContent.classList.contains('hidden')) {
+loadProducts();
+} else {
+loadPaymentTables();
+}
+});
+// Logout
+cashierLogoutBtn.addEventListener('click', function() {
+localStorage.removeItem('rms_role');
+localStorage.removeItem('rms_username');
+window.location.reload();
+});
+});
+</script>
+<script id="navigation-script">
+document.addEventListener('DOMContentLoaded', function() {
+// Bottom navigation functionality
+const navWaiter = document.getElementById('nav-waiter');
+const navKitchen = document.getElementById('nav-kitchen');
+const navCashier = document.getElementById('nav-cashier');
+const waiterPanel = document.getElementById('waiter-panel');
+const kitchenPanel = document.getElementById('kitchen-panel');
+const cashierPanel = document.getElementById('cashier-panel');
+const loginScreen = document.getElementById('login-screen');
+// Hide navigation buttons based on role
+const currentRole = localStorage.getItem('rms_role');
+if (currentRole === 'waiter') {
+navKitchen.style.display = 'none';
+navCashier.style.display = 'none';
+} else if (currentRole === 'kitchen') {
+navWaiter.style.display = 'none';
+navCashier.style.display = 'none';
+} else if (currentRole === 'cashier') {
+navWaiter.style.display = 'none';
+navKitchen.style.display = 'none';
+}
+navWaiter.addEventListener('click', function() {
+if (localStorage.getItem('rms_role') === 'waiter') {
+// Hide all panels
+waiterPanel.classList.remove('hidden');
+kitchenPanel.classList.add('hidden');
+cashierPanel.classList.add('hidden');
+loginScreen.classList.add('hidden');
+// Set active tab
+navWaiter.classList.add('text-primary');
+navWaiter.classList.remove('text-gray-500');
+// Load data
+if (typeof loadTables === 'function') {
+loadTables();
+}
+}
+});
+navKitchen.addEventListener('click', function() {
+if (localStorage.getItem('rms_role') === 'kitchen') {
+// Hide all panels
+waiterPanel.classList.add('hidden');
+kitchenPanel.classList.remove('hidden');
+cashierPanel.classList.add('hidden');
+loginScreen.classList.add('hidden');
+// Set active tab
+navKitchen.classList.add('text-primary');
+navKitchen.classList.remove('text-gray-500');
+// Load data
+if (typeof loadOrders === 'function') {
+loadOrders();
+}
+}
+});
+navCashier.addEventListener('click', function() {
+if (localStorage.getItem('rms_role') === 'cashier') {
+// Hide all panels
+waiterPanel.classList.add('hidden');
+kitchenPanel.classList.add('hidden');
+cashierPanel.classList.remove('hidden');
+loginScreen.classList.add('hidden');
+// Set active tab
+navCashier.classList.add('text-primary');
+navCashier.classList.remove('text-gray-500');
+// Load data
+if (typeof loadPaymentTables === 'function') {
+loadPaymentTables();
+}
+if (typeof loadProducts === 'function') {
+loadProducts();
+}
+}
+});
+});
+</script>
+<script id="animation-utilities">
+document.addEventListener('DOMContentLoaded', function() {
+  // Add ripple effect to buttons
+  function addRippleEffect() {
+    const buttons = document.querySelectorAll('button:not([data-no-ripple])');
+    
+    buttons.forEach(button => {
+      button.addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        const rect = button.getBoundingClientRect();
+        
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        
+        ripple.style.width = ripple.style.height = `${size}px`;
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        ripple.className = 'ripple';
+        
+        button.appendChild(ripple);
+        
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      });
+    });
+  }
+  
+  // Add hover scale effect to cards
+  function addHoverEffects() {
+    const cards = document.querySelectorAll('.table-card, .bg-white.rounded-lg.shadow');
+    
+    cards.forEach(card => {
+      card.classList.add('transition-transform', 'duration-200');
+      
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-4px)';
+        this.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = '';
+        this.style.boxShadow = '';
+      });
+    });
+  }
+  
+  // Add smooth transitions to modal openings
+  function addModalTransitions() {
+    const modals = document.querySelectorAll('[id$="-modal"]');
+    
+    modals.forEach(modal => {
+      const modalContent = modal.querySelector('.bg-white.rounded-lg');
+      
+      if (modalContent) {
+        modalContent.classList.add('transform', 'transition-all', 'duration-300');
+        
+        // Store original display style
+        const originalDisplay = modal.style.display;
+        
+        // Override the show/hide behavior
+        const originalHidden = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'hidden');
+        
+        Object.defineProperty(modal, 'hidden', {
+          get: function() {
+            return this.classList.contains('hidden');
+          },
+          set: function(value) {
+            if (value) {
+              // Hide
+              modalContent.style.transform = 'scale(0.95)';
+              modalContent.style.opacity = '0';
+              
+              setTimeout(() => {
+                this.classList.add('hidden');
+              }, 300);
+            } else {
+              // Show
+              this.classList.remove('hidden');
+              
+              setTimeout(() => {
+                modalContent.style.transform = 'scale(1)';
+                modalContent.style.opacity = '1';
+              }, 10);
+            }
+          }
+        });
+      }
+    });
+  }
+  
+  // Apply animation to notifications
+  function setupNotificationSystem() {
+    // Create notification container if it doesn't exist
+    let notificationContainer = document.getElementById('notification-container');
+    
+    if (!notificationContainer) {
+      notificationContainer = document.createElement('div');
+      notificationContainer.id = 'notification-container';
+      notificationContainer.className = 'fixed top-4 right-4 z-50 flex flex-col items-end space-y-2';
+      document.body.appendChild(notificationContainer);
+    }
+    
+    // Global function to show notifications
+    window.showNotification = function(message, type = 'info', duration = 3000) {
+      const notification = document.createElement('div');
+      
+      // Set color based on type
+      let bgColor, textColor, icon;
+      
+      switch (type) {
+        case 'success':
+          bgColor = 'bg-success';
+          textColor = 'text-white';
+          icon = 'ri-check-line';
+          break;
+        case 'error':
+          bgColor = 'bg-danger';
+          textColor = 'text-white';
+          icon = 'ri-error-warning-line';
+          break;
+        case 'warning':
+          bgColor = 'bg-warning';
+          textColor = 'text-white';
+          icon = 'ri-alert-line';
+          break;
+        default:
+          bgColor = 'bg-info';
+          textColor = 'text-white';
+          icon = 'ri-information-line';
+      }
+      
+      notification.className = `${bgColor} ${textColor} px-4 py-2 rounded-lg shadow-lg flex items-center min-w-[200px] max-w-xs animate-slide-in-right`;
+      notification.innerHTML = `
+        <i class="${icon} mr-2"></i>
+        <span class="flex-1">${message}</span>
+        <button class="ml-2 text-white/80 hover:text-white">
+          <i class="ri-close-line"></i>
+        </button>
+      `;
+      
+      // Close button
+      const closeBtn = notification.querySelector('button');
+      closeBtn.addEventListener('click', () => {
+        notification.classList.replace('animate-slide-in-right', 'animate-slide-out-right');
+        
+        setTimeout(() => {
+          notification.remove();
+        }, 300);
+      });
+      
+      notificationContainer.appendChild(notification);
+      
+      // Auto remove after duration
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.classList.replace('animate-slide-in-right', 'animate-slide-out-right');
+          
+          setTimeout(() => {
+            notification.remove();
+          }, 300);
+        }
+      }, duration);
+      
+      return notification;
+    };
+  }
+  
+  // Initialize all animations
+  addRippleEffect();
+  addHoverEffects();
+  addModalTransitions();
+  setupNotificationSystem();
+  
+  // Re-apply on dynamic content changes
+  const observer = new MutationObserver(function(mutations) {
+    addRippleEffect();
+    addHoverEffects();
+  });
+  
+  observer.observe(document.body, { childList: true, subtree: true });
+});
+</script>
+</body>
+</html>

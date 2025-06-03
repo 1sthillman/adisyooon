@@ -1,0 +1,5 @@
+KENDİN ÖNCEDEN EKLENEN ÖZELLİKLERİ KALDIRMA BUNA İZİN VERMİYORUM KOD YAPISINI BOZMADAN DEDİKLERİME ODAKLAN DÜZGÜNCE İŞİNİ YAP"Lütfen sadece belirttiğim kısmı güncelle veya geliştir. Daha önce yazılmış kodları, özellikle çalışan ve test edilmiş kritik fonksiyonları kesinlikle değiştirme veya silme. Eğer bir düzenleme gerekiyorsa, yalnızca ilgili fonksiyon veya modül içinde lokal bir değişiklik yap. Global yapıyı, sınıf isimlerini, API bağlantılarını, veri modellerini ya da uygulamanın genel akışını bozma. Mevcut kodun yapısını anlamaya çalış, gerekiyorsa önce analiz et.
+
+Eğer değiştirilmesi gereken bir şey olduğunu düşünüyorsan, önce öneri olarak sun ve benim onayımı beklemeden otomatik olarak kodu değiştirme.
+
+Kodda ekleme yapacaksan, var olan yapıya uygun biçimde ve açıklama (yorum satırı) yazarak ekle. Gereksiz tekrarlar veya fazladan kod üretme."
